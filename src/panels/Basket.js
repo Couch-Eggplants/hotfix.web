@@ -12,6 +12,7 @@ const Basket = ({ match: { params: { areaId, itemId }}, foodAreas, order }) => {
   const [ faster, setFaster ] = useState(true);
   const [ time, setTime ] = useState('');
   const [ selfService, setSelfService ] = useState(false);
+  const [ validTime, setValidTime ] = useState(true);
   const area = foodAreas.filter(area => area.id === areaId)[0];
   const item = area.items.filter(item => item.id === itemId)[0];
 
@@ -128,6 +129,8 @@ const Basket = ({ match: { params: { areaId, itemId }}, foodAreas, order }) => {
             }}
             onChange={event => {
               setFaster(false);
+              var re = new RegExp("^([0-1][0-9]|2[0-3]):([0-5][0-9])$");
+              setValidTime(re.test(event.target.value))
               setTime(event.target.value);
             }}
             onBlur={() => {
@@ -147,7 +150,7 @@ const Basket = ({ match: { params: { areaId, itemId }}, foodAreas, order }) => {
         </div>
       </div>
       <footer className="Place__footer">
-        <Link to={`/order/${area.id}/${item.id}`} className="Place__order">
+        <Link to={validTime ? `/order/${area.id}/${item.id}` : '#'} className="Place__order">
           Оплатить {price}
         </Link>
       </footer>
